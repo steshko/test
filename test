@@ -1,0 +1,62 @@
+const myComboboxTemplate = template<ComboboxOptions>(function(this: Combobox) {
+    return (
+        `<div class=${this.positioningRegion} role="presentation">
+            <div class=${this.control} role="combobox" aria-haspopup="listbox" aria-expanded=${this.open}>
+                <input
+                    class=${this.input}
+                    type="text"
+                    role="textbox"
+                    autocomplete="off"
+                    aria-autocomplete="list"
+                    aria-controls=${this.listboxId}
+                    aria-activedescendant=${this.ariaActiveDescendant}
+                    placeholder=${this.placeholder}
+                    disabled=${this.disabled || null}
+                    readonly=${this.readonly || null}
+                    value=${this.displayValue}
+                    onInput=${this.handleTextInput}
+                    onFocus=${this.handleFocus}
+                    onBlur=${this.handleBlur}
+                    onKeydown=${this.handleKeyDown}
+                    ref=${this.inputRef}
+                />
+                <span class=${this.indicator} role="presentation" onClick=${this.handleIndicatorClick}>
+                    <slot name="indicator">${this.defaultIndicator}</slot>
+                </span>
+                <span class=${this.end} role="presentation">
+                    <slot name="end"></slot>
+                </span>
+            </div>
+            <div class=${this.listPositioningRegion} role="presentation">
+                <ul
+                    class=${this.list}
+                    role="listbox"
+                    aria-label=${this.label}
+                    id=${this.listboxId}
+                    hidden=${!this.open}
+                    ref=${this.listRef}
+                    onKeyDown=${this.handleListKeyDown}
+                    onFocus=${this.handleListFocus}
+                    onBlur=${this.handleListBlur}
+                    onPointerMove=${this.handlePointerMove}
+                >
+                    <slot name="options">
+                        ${this.options.map((option, index) => (
+                            <li
+                                class=${this.getOptionClasses(option, index)}
+                                id=${`${this.listboxId}-option-${index}`}
+                                role="option"
+                                aria-selected=${this.selectedOptions.includes(option)}
+                                onMouseEnter=${() => this.handleOptionHover(option, index)}
+                                onMouseDown=${() => this.handleOptionSelect(option)}
+                                ref=${(el) => this.optionRefs.set(option, el)}
+                            >
+                                ${this.getOptionContent(option)}
+                            </li>
+                        ))}
+                    </slot>
+                </ul>
+            </div>
+        </div>`
+    );
+});
